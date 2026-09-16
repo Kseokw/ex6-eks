@@ -58,7 +58,7 @@ spec:
     # - host: "api.kserendipity.cloud"
     - http:
         paths:
-          - path: /
+          # - path: /
           #   pathType: Exact
           #   backend:
           #     service: 
