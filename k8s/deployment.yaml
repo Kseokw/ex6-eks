@@ -59,20 +59,20 @@ spec:
     - http:
         paths:
           - path: /
-            pathType: Exact
-            backend:
-              service: 
-                name: redirect-to-nginx
-                port:
-                  name: use-annotation
-          - path: /api
-            pathType: Prefix
-            backend:
-              service: 
-                # 주의: 이 이름의 Service 리소스가 현재 파일이나 다른 파일에 반드시 존재해야 합니다.
-                name: fastapi-service
-                port:
-                  number: 8000
+          #   pathType: Exact
+          #   backend:
+          #     service: 
+          #       name: redirect-to-nginx
+          #       port:
+          #         name: use-annotation
+          # - path: /api
+          #   pathType: Prefix
+          #   backend:
+          #     service: 
+          #       # 주의: 이 이름의 Service 리소스가 현재 파일이나 다른 파일에 반드시 존재해야 합니다.
+          #       name: fastapi-service
+          #       port:
+          #         number: 8000
           - path: /
             pathType: Prefix
             backend:
