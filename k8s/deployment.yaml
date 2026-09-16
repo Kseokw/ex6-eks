@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx-container
-          image: seok9/nginx:b883c9a028723f67c8d8cb34146cbf31ed7b48a4
+          image: seok9/nginx:e53f7552a9265a62a6b9ccb188aa0dd7dd9a9783
           ports:
             - containerPort: 80
 ---
