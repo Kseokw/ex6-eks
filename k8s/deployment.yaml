@@ -48,8 +48,8 @@ metadata:
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     
     # 루트(/) 접속 시 /nginx로 보내는 리다이렉트 액션은 정상 지원되므로 유지
-    alb.ingress.kubernetes.io/actions.redirect-to-nginx: >
-      {"type":"redirect","redirectConfig":{"path":"/nginx","statusCode":"HTTP_301"}}
+    # alb.ingress.kubernetes.io/actions.redirect-to-nginx: >
+    #   {"type":"redirect","redirectConfig":{"path":"/nginx","statusCode":"HTTP_301"}}
       
     # [수정 3] AWS ALB에서 에러를 유발하는 URL Rewrite 어노테이션 2개 삭제 완료
 spec:
@@ -73,7 +73,7 @@ spec:
                 name: fastapi-service
                 port:
                   number: 8000
-          - path: /nginx
+          - path: /
             pathType: Prefix
             backend:
               service: 
