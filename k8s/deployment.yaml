@@ -55,7 +55,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: "api.kserendipity.cloud"
+    # - host: "api.kserendipity.cloud"
       http:
         paths:
           - path: /
