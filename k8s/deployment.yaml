@@ -78,6 +78,6 @@ spec:
             backend:
               service: 
                 # [수정 1]에서 변경한 이름과 정확히 연결됨
-                name: nginx-service
+                name: nginx-svc
                 port:
                   number: 80
