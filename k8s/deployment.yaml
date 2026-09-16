@@ -22,13 +22,62 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-svc
+  # [수정 1] Ingress의 backend 이름과 일치하도록 nginx-svc -> nginx-service 로 변경
+  name: nginx-service
   namespace: default
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: nginx-web-label
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+---
+# [수정 2] Ingress 구문을 시작하기 위한 구분자(---)와 apiVersion 필수 추가
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ex-ingress
+  annotations:
+    alb.ingress.kubernetes.io/security-group: sg-020a19d4dc39f25c7
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-southeast-1:925047940866:certificate/4fc0890f-787e-4e98-9ee4-19efc2fda5ad
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    
+    # 루트(/) 접속 시 /nginx로 보내는 리다이렉트 액션은 정상 지원되므로 유지
+    alb.ingress.kubernetes.io/actions.redirect-to-nginx: >
+      {"type":"redirect","redirectConfig":{"path":"/nginx","statusCode":"HTTP_301"}}
+      
+    # [수정 3] AWS ALB에서 에러를 유발하는 URL Rewrite 어노테이션 2개 삭제 완료
+spec:
+  ingressClassName: alb
+  rules:
+    - host: "api.kserendipity.cloud"
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service: 
+                name: redirect-to-nginx
+                port:
+                  name: use-annotation
+          - path: /api
+            pathType: Prefix
+            backend:
+              service: 
+                # 주의: 이 이름의 Service 리소스가 현재 파일이나 다른 파일에 반드시 존재해야 합니다.
+                name: fastapi-service
+                port:
+                  number: 8000
+          - path: /nginx
+            pathType: Prefix
+            backend:
+              service: 
+                # [수정 1]에서 변경한 이름과 정확히 연결됨
+                name: nginx-service
+                port:
+                  number: 80
